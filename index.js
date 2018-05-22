@@ -12,6 +12,7 @@ const LocationStream = require('./streams/LocationStream')
 const HTMLBuilderStream = require('./streams/HTMLBuilderStream')
 const MomentStream = require('./streams/MomentStream')
 const StatsStream = require('./streams/StatsStream')
+const TextAnalyzerStream = require('./streams/TextAnalyzerStream')
 const TranslateStream = require('./streams/TranslateStream')
 
 const cfg = {
@@ -39,6 +40,8 @@ const htmlBuilderStream = new HTMLBuilderStream({ objectMode: true })
 const momentStream = new MomentStream({ objectMode: true })
 const statsStream = new StatsStream({ objectMode: true })
 const translateStream = new TranslateStream({ objectMode: true })
+const textAnalyzerStream = new TextAnalyzerStream({ objectMode: true })
+const socketStream = new SocketStream({ objectMode: true }, socketIo)
 
 socketIo.on('connection', (socket) => {
     socket.emit('connected', { filter: track })
@@ -47,18 +50,21 @@ socketIo.on('connection', (socket) => {
         twitterStream.changeFilter(data.filter)
         statsStream.reset()
     })
+    socket.on('changeLanguage', (data) => {
+        console.log('Change language', data.filter)
+        translateStream.changeLanguage(data.filter)
+        statsStream.reset()
+    })
 })
-
-
-const socketStream = new SocketStream({ objectMode: true }, socketIo)
 
 twitterStream
     .pipe(formatStream)
     .pipe(locationStream)
     .pipe(momentStream)
+    .pipe(statsStream)
+    .pipe(textAnalyzerStream)
     .pipe(translateStream)
     .pipe(htmlBuilderStream)
-    .pipe(statsStream)
     .pipe(socketStream)
 
 server.listen(8000, () => {

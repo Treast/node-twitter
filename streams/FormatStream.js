@@ -6,17 +6,21 @@ class FormatStream extends Transform {
     }
 
     _transform(chunk, encoding, callback) {
-        const data = {
-            name: chunk.user.screen_name,
-            username: chunk.user.name,
-            profile_picture: chunk.user.profile_image_url_https,
-            created_at: chunk.created_at,
-            text: chunk.text,
-            place: chunk.place,
-            query: chunk.query
+        if (chunk.user) {
+            const data = {
+                name: chunk.user.screen_name,
+                username: chunk.user.name,
+                profile_picture: chunk.user.profile_image_url_https,
+                created_at: chunk.created_at,
+                text: chunk.text,
+                place: chunk.place,
+                query: chunk.query
+            }
+            if (chunk.place) this.push(data)
+            callback()
+        } else {
+            console.log("okok")
         }
-        if (chunk.place) this.push(data)
-        callback()
     }
 }
 

@@ -26,8 +26,6 @@ class LocationStream extends Transform {
             data.location.lat += coordinate[1]
         }
 
-        console.log(chunk.text)
-
         data.location.long /= coordinates.length
         data.location.lat /= coordinates.length
         this.push(data)
