@@ -20,6 +20,7 @@
             height: 100%;
             margin: 0;
             padding: 0;
+            font-family: 'Helvetica Neue';
         }
 
         .tweet__header {
@@ -56,11 +57,40 @@
             font-size: 14px;
             line-height: 20px;
         }
+
+        #sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 200px;
+            height: 100%;
+            z-index: 20;
+            background-color: #e9e9e9;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .sidebar__title {
+            display: block;
+            font-size: 16px;
+            text-align: center;
+        }
     </style>
 </head>
 
 <body>
     <div id="map"></div>
+    <div id="sidebar">
+        <h2 class="sidebar__title">Filtre</h2>
+        <input type="text" id="inputFilter">
+        <button id="changeFilter">Changer de filtre</button>
+
+        <h2 class="sidebar__title">Top 3 des mots utilisés</h2>
+        <ol id="sidebar__top3">
+        </ol>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.0/socket.io.js"></script>
     <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
     </script>
@@ -68,6 +98,7 @@
     </script>
     <script>
         var map;
+        var infoWindowOpened;
         function initMap() {
 
             map = new google.maps.Map(document.getElementById('map'), {
@@ -84,8 +115,30 @@
 
             var socket = io('http://localhost:8000');
 
+            socket.on('connected', (data) => {
+                var input = document.querySelector('#inputFilter')
+                input.value = data.filter
+            })
+
             socket.on('data', function (data) {
                 console.log(data)
+
+                var ol = document.querySelector('#sidebar__top3')
+                ol.innerHTML = ''
+
+                var input = document.querySelector('#inputFilter')
+
+                if (document.activeElement !== input) {
+                    input.value = data.tweet.query
+                }
+
+                for (var i = 0; i < data.tweet.stats.length; i++) {
+                    var word = data.tweet.stats[i]
+                    var el = document.createElement('li')
+                    el.innerText = word
+                    ol.appendChild(el)
+                }
+
                 var marker = new google.maps.Marker({
                     position: {
                         lat: data.tweet.location.lat,
@@ -100,8 +153,26 @@
                 });
 
                 marker.addListener('click', function () {
-                    infowindow.open(map, marker);
+                    if (infoWindowOpened) {
+                        infoWindowOpened.close()
+                    }
+                    infowindow.open(map, marker)
+                    infoWindowOpened = infowindow
                 });
+            })
+
+            document.querySelector('#changeFilter').addEventListener('click', function () {
+                var input = document.querySelector('#inputFilter')
+                var filter = input.value
+
+                console.log('Change filter: ' + filter)
+
+                var ol = document.querySelector('#sidebar__top3')
+                ol.innerHTML = ''
+
+                socket.emit('changeFilter', {
+                    filter: filter
+                })
             })
         }
 

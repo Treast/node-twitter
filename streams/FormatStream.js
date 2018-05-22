@@ -12,7 +12,8 @@ class FormatStream extends Transform {
             profile_picture: chunk.user.profile_image_url_https,
             created_at: chunk.created_at,
             text: chunk.text,
-            place: chunk.place
+            place: chunk.place,
+            query: chunk.query
         }
         if (chunk.place) this.push(data)
         callback()

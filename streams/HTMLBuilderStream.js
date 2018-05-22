@@ -21,7 +21,8 @@ class HTMLBuilderStream extends Transform {
             text: chunk.text,
             location: chunk.location,
             place: chunk.place,
-            html: html
+            html: html,
+            query: chunk.query
         }
         this.push(data)
         callback()

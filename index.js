@@ -11,6 +11,8 @@ const FormatStream = require('./streams/FormatStream')
 const LocationStream = require('./streams/LocationStream')
 const HTMLBuilderStream = require('./streams/HTMLBuilderStream')
 const MomentStream = require('./streams/MomentStream')
+const StatsStream = require('./streams/StatsStream')
+const TranslateStream = require('./streams/TranslateStream')
 
 const cfg = {
     consumer_key: 'kkQLZ7ll1ySuiVffLHtAoKsrb',
@@ -28,23 +30,35 @@ server.on('request', (req, res) => {
 })
 
 const socketIo = io(server)
+track = 'trump'
 
-socketIo.on('connection', (socket) => {
-    socket.emit('message', { tweet: 'Connected' })
-})
-
-const twitterStream = new TwitterStream({ objectMode: true }, cfg)
+const twitterStream = new TwitterStream({ objectMode: true }, cfg, track)
 const formatStream = new FormatStream({ objectMode: true })
 const locationStream = new LocationStream({ objectMode: true })
 const htmlBuilderStream = new HTMLBuilderStream({ objectMode: true })
 const momentStream = new MomentStream({ objectMode: true })
+const statsStream = new StatsStream({ objectMode: true })
+const translateStream = new TranslateStream({ objectMode: true })
+
+socketIo.on('connection', (socket) => {
+    socket.emit('connected', { filter: track })
+    socket.on('changeFilter', (data) => {
+        console.log('Change filter', data.filter)
+        twitterStream.changeFilter(data.filter)
+        statsStream.reset()
+    })
+})
+
+
 const socketStream = new SocketStream({ objectMode: true }, socketIo)
 
 twitterStream
     .pipe(formatStream)
     .pipe(locationStream)
     .pipe(momentStream)
+    .pipe(translateStream)
     .pipe(htmlBuilderStream)
+    .pipe(statsStream)
     .pipe(socketStream)
 
 server.listen(8000, () => {

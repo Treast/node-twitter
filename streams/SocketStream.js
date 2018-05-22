@@ -7,7 +7,7 @@ class SocketStream extends Writable {
     }
 
     _write(chunk, _, callback) {
-        console.log(chunk.toString())
+        console.log(JSON.stringify(chunk))
         this.socketIo.emit('data', { tweet: chunk })
         callback()
     }

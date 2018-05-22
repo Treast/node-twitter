@@ -17,6 +17,7 @@ class LocationStream extends Transform {
                 lat: 0
             },
             place: chunk.place,
+            query: chunk.query
         }
         let coordinates = chunk.place.bounding_box.coordinates[0]
 
@@ -25,9 +26,10 @@ class LocationStream extends Transform {
             data.location.lat += coordinate[1]
         }
 
+        console.log(chunk.text)
+
         data.location.long /= coordinates.length
         data.location.lat /= coordinates.length
-        console.log(JSON.stringify(data))
         this.push(data)
         callback()
     }
