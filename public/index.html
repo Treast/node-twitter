@@ -1,0 +1,112 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Twitter</title>
+    <style>
+        /* Always set the map height explicitly to define the size of the div
+         * element that contains the map. */
+
+        #map {
+            height: 100%;
+        }
+
+        /* Optional: Makes the sample page fill the window. */
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .tweet__header {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .tweet__header>* {
+            margin: 0 2px;
+        }
+
+        .tweet__header__profile-picture {
+            flex-grow: 0;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+        }
+
+        .tweet__header__screen-name {
+            color: #14171a;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .tweet__header__username,
+        .tweet__header__created-at {
+            font-size: 14px;
+            color: #657786;
+        }
+
+        .tweet__content p {
+            font-size: 14px;
+            line-height: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.0/socket.io.js"></script>
+    <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC1luMy3fSWs3dcGWoJFlLEGypj-0VWR2M&callback=initMap">
+    </script>
+    <script>
+        var map;
+        function initMap() {
+
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 3,
+                center: {
+                    lat: 1,
+                    lng: 1
+                }
+            });
+
+            // Add a marker clusterer to manage the markers.
+            var markerCluster = new MarkerClusterer(map, [],
+                { imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m' });
+
+            var socket = io('http://localhost:8000');
+
+            socket.on('data', function (data) {
+                console.log(data)
+                var marker = new google.maps.Marker({
+                    position: {
+                        lat: data.tweet.location.lat,
+                        lng: data.tweet.location.long
+                    },
+                    map: map,
+                    icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAACRklEQVRYhe3Wy4vOURzH8ddhiA0Zl7IgxYKklA1NTCS5rRi7KaUYKQuL2VD+ALcaIk1sWEgsyU6Uy8IolHJfUIaJKWlcwhyL38yYecwzv/N7Zjbye9dTz+Vzzvf9fM/vnA4lJSUl/zeh2g/bLnePxfzrBWswVfQaV/GgIjMF3y811X8fboK6sbCoQougFfPR34oNogO42ZdZho04Um2ScbllgjvYVEgtaBecHpD7Q4PghuCY4KqgAy/xtVbBOVghuILliXrN2JmT2YeNolY8R0OtgvMG3gV3sSdXLziam8n4KNgpuIj31UJ5gl0VxU8KrmFJlfx8zEoUnI7xosV4UavgU3ys+G694JHgEjYYutHeJcrBB9ECIzx/pOziaIswsOsG0yRoQjc68BA9+IXxCYJfEjK5govwTHRQsB+ThsnUY13fC2JKYTmd6ydviWcLOgWrZJ1JoerhX8GblFBeB6/jJ9YmFi3C/ZRQ/kEd7R61yvDzXkmJ5QtyVtQ+Sp1KunErJZgiCC2izbIl763VahDHU4OpgnMFezGhNp8h9IoOpYZTbzOvMRkra1IaTLRX4hFDegeJGmX3udFwG6eKDEgXhGizaDsu4HGhsXSJVhccU1Aw45xoFzoLjOkSLcWPosVGEpxY8bkOqwVnBJ+lH943RQsV+0NDilZjBrYKmmX3wmmK7eJvooM4XItYPyMJvpUt5zjBDun3vFc4Lzrh76vamArCJ7SJ2jATjYJlso7Wyx6RHtnyPRHdwb3RSpWUlJSU/EP8Bq6oeZ7xw8MZAAAAAElFTkSuQmCC"
+                });
+
+                var infowindow = new google.maps.InfoWindow({
+                    content: data.tweet.html
+                });
+
+                marker.addListener('click', function () {
+                    infowindow.open(map, marker);
+                });
+            })
+        }
+
+
+    </script>
+</body>
+
+</html>
