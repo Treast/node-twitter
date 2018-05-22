@@ -18,6 +18,7 @@ class TranslateStream extends Transform {
             })
             .catch(error => {
                 console.log(error)
+                callback()
             })
     }
 

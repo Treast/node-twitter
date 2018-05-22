@@ -4,6 +4,7 @@ const http = require('http')
 const fs = require('fs')
 const path = require('path')
 const io = require('socket.io')
+require('dotenv').config()
 const TwitterStream = require('./streams/TwitterStream')
 const StringifyStream = require('./streams/StringifyStream')
 const SocketStream = require('./streams/SocketStream')
@@ -16,18 +17,24 @@ const TextAnalyzerStream = require('./streams/TextAnalyzerStream')
 const TranslateStream = require('./streams/TranslateStream')
 
 const cfg = {
-    consumer_key: 'kkQLZ7ll1ySuiVffLHtAoKsrb',
-    consumer_secret: 'hoAed7PWTlK75GSng3F3dYg5Pd90cvmVzGaLdMPunSG7yJDbRk',
-    access_token_key: '2271466346-YQbOGDo2uphWKgW75wMUplUeSJgVwjauMuQeWVJ',
-    access_token_secret: 'cLAG5dU8z8TlzeZ4kHWE1GJIGjq1quiqhoaa2TVZE9WNS'
+    consumer_key: process.env.TWITTER_CONSUMER_KEY,
+    consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+    access_token_key: process.env.TWITTER_ACCESS_TOKEN,
+    access_token_secret: process.env.TWITTER_ACCESS_SECRET
 }
 
 const server = http.createServer()
 
 server.on('request', (req, res) => {
-    const file = fs.createReadStream(path.resolve(__dirname, 'public', 'index.html'))
-    res.writeHead(200, { 'Content-Type': 'text/html' })
-    file.pipe(res)
+    if (req.url === '/') {
+        const file = fs.createReadStream(path.resolve(__dirname, 'public', 'index.html'))
+        res.writeHead(200, { 'Content-Type': 'text/html' })
+        file.pipe(res)
+    } else if (req.url === '/twitter.mp3') {
+        const file = fs.createReadStream(path.resolve(__dirname, 'twitter.mp3'))
+        res.writeHead(200, { 'Content-Type': 'audio/mpeg' })
+        file.pipe(res)
+    }
 })
 
 const socketIo = io(server)

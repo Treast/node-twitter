@@ -17,10 +17,8 @@ class FormatStream extends Transform {
                 query: chunk.query
             }
             if (chunk.place) this.push(data)
-            callback()
-        } else {
-            console.log("okok")
         }
+        callback()
     }
 }
 

@@ -70,10 +70,14 @@
             display: flex;
             flex-direction: column;
             padding: 20px;
+            -moz-box-shadow: -3px 3px 5px 0px #9b9b9b;
+            -webkit-box-shadow: -3px 3px 5px 0px #9b9b9b;
+            -o-box-shadow: -3px 3px 5px 0px #9b9b9b;
+            box-shadow: -3px 3px 5px 0px #9b9b9b;
         }
 
         .sidebar__title {
-            display: block;
+            display: inline-block;
             font-size: 16px;
             text-align: center;
         }
@@ -92,6 +96,21 @@
             width: 50%;
             transition: width 1s ease-in-out;
             background-color: #2ecc71;
+        }
+
+        .sidebar__subtitle {
+            display: inline-block;
+            font-weight: 300;
+        }
+
+        #sidebar__polarity__percent::before {
+            display: inline-block;
+            content: '('
+        }
+
+        #sidebar__polarity__percent::after {
+            display: inline-block;
+            content: ')'
         }
     </style>
 </head>
@@ -115,7 +134,11 @@
             <option value="ru">Russe</option>
         </select>
 
-        <h2 class="sidebar__title">Popularité</h2>
+        <h2 class="sidebar__title">Popularité
+            <div class="sidebar__subtitle">
+                <span id="sidebar__polarity__percent">50%</span>
+            </div>
+        </h2>
         <div class="sidebar__polarity">
             <div class="sidebar__polarity--positive"></div>
         </div>
@@ -156,6 +179,9 @@
             socket.on('data', function (data) {
                 console.log(data)
 
+                var audio = new Audio('twitter.mp3');
+                audio.play();
+
                 if (data.tweet.polarity == 'positive') {
                     polarity.positive += 1
                 } else if (data.tweet.polarity == 'negative') {
@@ -163,7 +189,13 @@
                 }
 
                 var percentPositive = parseInt(polarity.positive) * 100 / (parseInt(polarity.positive) + parseInt(polarity.negative))
+
+                if (polarity.negative + polarity.positive === 0) {
+                    percentPositive = 50
+                }
+
                 document.querySelector('.sidebar__polarity--positive').style.width = percentPositive + '%'
+                document.querySelector('#sidebar__polarity__percent').innerText = Math.round(percentPositive).toFixed(0) + '%'
 
                 var ol = document.querySelector('#sidebar__top3')
                 ol.innerHTML = ''
