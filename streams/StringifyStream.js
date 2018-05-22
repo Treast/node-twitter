@@ -1,5 +1,8 @@
 const { Transform } = require('stream')
 
+/**
+ * Not used
+ */
 class StringifyStream extends Transform {
     constructor(options) {
         super(options)

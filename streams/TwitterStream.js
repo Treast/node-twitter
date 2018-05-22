@@ -1,8 +1,16 @@
 const { Readable } = require('stream')
 const Twitter = require('twitter')
 
+/**
+ * Read the Twitter stream about a tracking subject
+ */
 class TwitterStream extends Readable {
 
+    /**
+     * @param {Object} options Options for the stream
+     * @param {Object} config TwitterConfig
+     * @param {String} track Tracking subject
+     */
     constructor(options, config, track) {
         super(options)
         this.config = config
@@ -13,6 +21,10 @@ class TwitterStream extends Readable {
 
     _read() { }
 
+    /**
+     * Called when the user wants to change the tracking subject.
+     * @param {String} filter 
+     */
     changeFilter(filter) {
         this.track = filter
         this.stream.destroy()
@@ -24,9 +36,13 @@ class TwitterStream extends Readable {
                 }, tweet)
                 this.push(data)
             })
+            this.stream.on('error', (error) => { console.log(error) })
         }, 3000)
     }
 
+    /**
+     * First connection to the Twitter stream.
+     */
     connect() {
         this.stream = this.client.stream('statuses/filter', { track: this.track })
         this.stream.on('data', (tweet) => {

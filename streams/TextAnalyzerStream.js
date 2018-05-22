@@ -2,7 +2,13 @@ const { Transform } = require('stream')
 const moment = require('moment')
 const AYLIENTextAPI = require('aylien_textapi')
 
+/**
+ * Analyze the tweet text to determine the sentiment of it (positive, neutral or negative)
+ */
 class TextAnalyzer extends Transform {
+    /**
+     * @param {Object} options Options for the stream
+     */
     constructor(options) {
         super(options)
         this.textapi = new AYLIENTextAPI({
@@ -11,6 +17,11 @@ class TextAnalyzer extends Transform {
         })
     }
 
+    /**
+     * @param {String} chunk Chunk
+     * @param {String} encoding Encoding
+     * @param {Function} callback Callback
+     */
     _transform(chunk, encoding, callback) {
         this.textapi.sentiment({
             'mode': 'tweet',

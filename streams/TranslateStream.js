@@ -1,12 +1,23 @@
 const { Transform } = require('stream')
 const axios = require('axios')
 
+/**
+ * Translate the tweet text to one of the provided language (French, English, Russian or Japanese)
+ */
 class TranslateStream extends Transform {
+    /**
+     * @param {Object} options Options for the stream
+     */
     constructor(options) {
         super(options)
         this.language = 'fr'
     }
 
+    /**
+     * @param {String} chunk Chunk
+     * @param {String} encoding Encoding
+     * @param {Function} callback Callback
+     */
     _transform(chunk, encoding, callback) {
         const data = chunk
         let encodedText = encodeURIComponent(chunk.text)
@@ -22,6 +33,10 @@ class TranslateStream extends Transform {
             })
     }
 
+    /**
+     * Called when the user changes the language
+     * @param {String} language Language
+     */
     changeLanguage(language) {
         this.language = language
     }

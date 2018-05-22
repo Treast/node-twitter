@@ -1,10 +1,20 @@
 const { Transform } = require('stream')
-
+/**
+ * Build the HTML from a tweet to be displayed in the client map
+ */
 class HTMLBuilderStream extends Transform {
+    /**
+     * @param {Object} options Options for the stream
+     */
     constructor(options) {
         super(options)
     }
 
+    /**
+     * @param {String} chunk Chunk
+     * @param {String} encoding Encoding
+     * @param {Function} callback Callback
+     */
     _transform(chunk, encoding, callback) {
         const html = `
             <div class="tweet__header">
