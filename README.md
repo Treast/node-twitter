@@ -1,16 +1,19 @@
 # Menu
--- [Quick presentation](#quick-presentation)
--- [Dependencies](#dependencies)
--- [Streams](#streams)
-	-- [TwitterStream](#twitterstream)
-	-- [FormatStream](#formatstream)
-	-- [LocationStream](#locationstream)
-	-- [MomentStream](#momentstream)
-	-- [StatsStream](#statsstream)
-	-- [TextAnalyzerStream](#textanalyzerstream)
-	-- [TranslateStream](#translatestream)
-	-- [HTMLBuilderStream](#htmlbuilderstream)
-	-- [SocketStream](#socketstream)
+- [Menu](#menu)
+- [Quick presentation](#quick-presentation)
+- [Demonstration](#demonstration)
+- [Dependencies](#dependencies)
+- [API](#api)
+- [Streams](#streams)
+    - [TwitterStream](#twitterstream)
+    - [FormatStream](#formatstream)
+    - [LocationStream](#locationstream)
+    - [MomentStream](#momentstream)
+    - [StatsStream](#statsstream)
+    - [TextAnalyzerStream](#textanalyzerstream)
+    - [TranslateStream](#translatestream)
+    - [HTMLBuilderStream](#htmlbuilderstream)
+    - [SocketStream](#socketstream)
 
 
 # Quick presentation
@@ -18,6 +21,9 @@
 This project is a map-based visualization of tweets. You can filter tweets by using a word, sentence or a hashtag. This will put a Twitter icon (![Twitter icon](https://www.vincentriva.fr/Twitter.png)) on the map and play a sound. Also, a list of the most used words is displayed in the sidebar.
 You can choose to translate tweets in French, English, Russian or Japanese.
 A popularity bar shows if tweets about the filter are positive or negative, based on each tweet content.
+
+# Demonstration
+[Link](https://twitter.vincentriva.fr/)
 
 # Dependencies
 - `axios` to make HTTP requests
