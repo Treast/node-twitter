@@ -2,7 +2,7 @@ const { Transform } = require('stream')
 const moment = require('moment')
 
 /**
- * Format the date of the tweet in a 'ago' time (like 5 seconds ago)
+ * Format the date of the tweet in a 'ago' time (like 5 seconds ago) // Useless
  */
 class MomentStream extends Transform {
     /**

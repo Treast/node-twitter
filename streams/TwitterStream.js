@@ -44,6 +44,9 @@ class TwitterStream extends Readable {
      * First connection to the Twitter stream.
      */
     connect() {
+        /*this.client.get('application/rate_limit_status', (error, tweets, response) => {
+            console.log('Response', response)
+        })*/
         this.stream = this.client.stream('statuses/filter', { track: this.track })
         this.stream.on('data', (tweet) => {
             let data = Object.assign({
@@ -51,6 +54,7 @@ class TwitterStream extends Readable {
             }, tweet)
             this.push(data)
         })
+        this.stream.on('error', (error) => { console.log(error) })
     }
 }
 

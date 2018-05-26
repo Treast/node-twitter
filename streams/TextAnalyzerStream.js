@@ -31,7 +31,12 @@ class TextAnalyzer extends Transform {
                 let data = Object.assign({
                     polarity: response.polarity
                 }, chunk)
-
+                this.push(data)
+                callback()
+            } else {
+                let data = Object.assign({
+                    polarity: 'neutral' // If we hit more than the daily limit
+                }, chunk)
                 this.push(data)
                 callback()
             }

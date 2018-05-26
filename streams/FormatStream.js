@@ -30,6 +30,8 @@ class FormatStream extends Transform {
             }
             // If the tweet got any place, go next
             if (chunk.place) this.push(data)
+        } else {
+            console.log(JSON.stringify(chunk))
         }
         callback()
     }
