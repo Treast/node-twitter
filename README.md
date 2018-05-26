@@ -2,34 +2,20 @@
 # Menu
 
 -  [Menu](#menu)
-
 -  [Quick presentation](#quick-presentation)
-
 -  [Demonstration](#demonstration)
 -  [How to install](#how-to-install)
-
 -  [Dependencies](#dependencies)
-
 -  [API](#api)
-
 -  [Streams](#streams)
-
 -  [TwitterStream](#twitterstream)
-
 -  [FormatStream](#formatstream)
-
 -  [LocationStream](#locationstream)
-
 -  [MomentStream](#momentstream)
-
 -  [StatsStream](#statsstream)
-
 -  [TextAnalyzerStream](#textanalyzerstream)
-
 -  [TranslateStream](#translatestream)
-
 -  [HTMLBuilderStream](#htmlbuilderstream)
-
 -  [SocketStream](#socketstream)
 
   
